@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Games - Mexican Restaurant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Navbar Animation */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up { animation: fadeInUp 1s ease-out forwards; }
+
+    /* Game Specific Styles */
+    #game-container {
+      background: linear-gradient(135deg, #fdf2f8 0%, #fae8ff 100%);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      border: 4px solid #f472b6;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      gap: 4px;
+      background-color: #a5f3fc; /* Light blue board */
+      border: 6px solid #f472b6;
+      border-radius: 12px;
+      padding: 8px;
+      width: 100%;
+      max-width: 400px;
+      aspect-ratio: 1 / 1;
+      margin: 0 auto;
+    }
+
+    .tile {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(1rem, 5vw, 1.8rem);
+      background-color: rgba(255, 255, 255, 0.4);
+      border-radius: 6px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.1s;
+    }
+
+    .tile:active { transform: scale(0.9); }
+
+    .sidebar-panel {
+      background: #ffffff;
+      border: 3px solid #f9a8d4;
+      border-radius: 12px;
+      padding: 10px;
+      min-width: 120px;
+      text-align: center;
+      box-shadow: 3px 3px 0px #f472b6;
+    }
+  </style>
+</head>
+<body class="bg-white">
+
+  <nav class="w-full fixed top-0 bg-white/80 z-50 backdrop-blur-sm p-4 flex justify-center items-center border-b border-gray-100">
+    <div class="flex items-center justify-between w-full max-w-6xl">
+      <div class="text-xl font-bold text-gray-800">Mexican Restaurant</div>
+      
+      <div class="hidden md:flex space-x-4 text-gray-800 font-semibold mx-auto">
+        <a href="index.html" class="hover:text-yellow-600">Home</a>
+        <a href="menu.html" class="hover:text-yellow-600">Menu</a>
+        <a href="about.html" class="hover:text-yellow-600">About</a>
+        <a href="games.html" class="text-pink-600">Games</a>
+        <a href="contact.html" class="hover:text-yellow-600">Contact</a>
+      </div>
+      
+      <div class="md:hidden">
+        <button id="menu-toggle" class="text-gray-800 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" class="hidden fixed top-16 right-4 bg-white bg-opacity-95 rounded-lg shadow-lg p-4 w-48 z-40">
+    <a href="index.html" class="block mb-2 text-gray-800 hover:text-yellow-600">Home</a>
+    <a href="menu.html" class="block mb-2 text-gray-800 hover:text-yellow-600">Menu</a>
+    <a href="about.html" class="block mb-2 text-gray-800 hover:text-yellow-600">About</a>
+    <a href="games.html" class="block mb-2 text-gray-800 hover:text-yellow-600">Games</a>
+    <a href="contact.html" class="block text-gray-800 hover:text-yellow-600">Contact</a>
+  </div>
+
+  <section class="pt-28 pb-12 px-4 min-h-screen flex flex-col items-center">
+    <div class="max-w-5xl w-full">
+      <h1 class="text-4xl font-bold mb-8 text-center text-gray-800">Fiesta Match-3</h1>
+      
+      <div id="game-container" class="flex flex-col md:flex-row gap-8 items-center justify-center">
+        
+        <div class="flex flex-row md:flex-col gap-4 w-full md:w-auto justify-center">
+          <div class="sidebar-panel">
+            <p class="text-pink-600 font-bold italic">Moves</p>
+            <p id="moves-left" class="text-2xl font-black">33</p>
+          </div>
+          <div class="sidebar-panel">
+            <p class="text-pink-600 font-bold italic">Score</p>
+            <p id="score" class="text-2xl font-black">0</p>
+          </div>
+        </div>
+
+        <div id="game-board"></div>
+
+        <div class="sidebar-panel w-full md:w-auto">
+          <p class="text-pink-600 font-bold mb-2">Orders</p>
+          <div class="flex flex-col gap-1 text-lg">
+            <span>🌮 0/10</span>
+            <span>🌯 0/10</span>
+            <span>🌶️ 0/10</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // --- UI Logic ---
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+
+    // --- Game Logic ---
+    const board = document.getElementById('game-board');
+    const scoreDisplay = document.getElementById('score');
+    const movesDisplay = document.getElementById('moves-left');
+    
+    const width = 8;
+    const foods = ['🌮', '🌯', '🌶️', '🥑', '🌽', '🍹'];
+    let tiles = [];
+    let score = 0;
+    let moves = 33;
+
+    function createBoard() {
+      for (let i = 0; i < width * width; i++) {
+        const tile = document.createElement('div');
+        tile.classList.add('tile');
+        tile.setAttribute('draggable', true);
+        tile.setAttribute('id', i);
+        tile.innerText = foods[Math.floor(Math.random() * foods.length)];
+        
+        tile.addEventListener('dragstart', dragStart);
+        tile.addEventListener('dragover', (e) => e.preventDefault());
+        tile.addEventListener('drop', dragDrop);
+        
+        board.appendChild(tile);
+        tiles.push(tile);
+      }
+    }
+
+    let draggedId, replacedId;
+
+    function dragStart() { draggedId = parseInt(this.id); }
+
+    function dragDrop() {
+      replacedId = parseInt(this.id);
+      const validMoves = [draggedId - 1, draggedId + 1, draggedId - width, draggedId + width];
+      
+      if (validMoves.includes(replacedId)) {
+        let temp = tiles[draggedId].innerText;
+        tiles[draggedId].innerText = tiles[replacedId].innerText;
+        tiles[replacedId].innerText = temp;
+        
+        moves--;
+        movesDisplay.innerText = moves;
+        checkMatches();
+      }
+    }
+
+    function checkMatches() {
+      // Row Check
+      for (let i = 0; i < 62; i++) {
+        if (i % 8 > 5) continue; 
+        let row = [i, i + 1, i + 2];
+        let val = tiles[i].innerText;
+        if (val !== '' && row.every(idx => tiles[idx].innerText === val)) {
+          score += 50;
+          row.forEach(idx => tiles[idx].innerText = '');
+        }
+      }
+      // Column Check
+      for (let i = 0; i < 47; i++) {
+        let col = [i, i + width, i + width * 2];
+        let val = tiles[i].innerText;
+        if (val !== '' && col.every(idx => tiles[idx].innerText === val)) {
+          score += 50;
+          col.forEach(idx => tiles[idx].innerText = '');
+        }
+      }
+      scoreDisplay.innerText = score;
+      fillBoard();
+    }
+
+    function fillBoard() {
+      setTimeout(() => {
+        tiles.forEach(tile => {
+          if (tile.innerText === '') {
+            tile.innerText = foods[Math.floor(Math.random() * foods.length)];
+          }
+        });
+      }, 200);
+    }
+
+    createBoard();
+    setInterval(checkMatches, 1000);
+  </script>
+</body>
+</html>

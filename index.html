@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mexican Restaurant</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom keyframes for border color animation */
+    @keyframes borderColorChange {
+      0% { border-color: #3b82f6; }
+      100% { border-color: #3b82f6; }
+    }
+    /* Animate border color change */
+    .border-animate {
+      animation: borderColorChange 2s forwards;
+    }
+    /* Animate menu buttons on load */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up {
+      animation: fadeInUp 1s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-white">
+
+  <!-- Navbar -->
+  <nav class="w-full fixed top-0 bg-transparent z-50 backdrop-blur-sm p-4 flex justify-center items-center">
+    <div class="flex items-center justify-between w-full max-w-6xl">
+      <!-- Left: Logo -->
+      <div class="text-xl font-bold text-gray-800">Mexican Restaurant</div>
+      
+      <!-- Center: Buttons -->
+      <div class="hidden md:flex space-x-4 text-gray-800 font-semibold mx-auto animate-fade-in-up">
+        <a href="index.html" class="hover:text-yellow-600">Home</a>
+        <a href="menu.html" class="hover:text-yellow-600">Menu</a>
+        <a href="about.html" class="hover:text-yellow-600">About</a>
+        <a href="games.html" class="hover:text-yellow-600">Games</a>
+        <a href="contact.html" class="hover:text-yellow-600">Contact</a>
+      </div>
+      
+      <!-- Mobile hamburger icon -->
+      <div class="md:hidden">
+        <button id="menu-toggle" class="text-gray-800 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden fixed top-16 right-4 bg-white bg-opacity-95 rounded-lg shadow-lg p-4 w-48 z-40">
+    <a href="index.html" class="block mb-2 text-gray-800 hover:text-yellow-600">Home</a>
+    <a href="menu.html" class="block mb-2 text-gray-800 hover:text-yellow-600">Menu</a>
+    <a href="about.html" class="block mb-2 text-gray-800 hover:text-yellow-600">About</a>
+    <a href="games.html" class="block mb-2 text-gray-800 hover:text-yellow-600">Games</a>
+    <a href="contact.html" class="block text-gray-800 hover:text-yellow-600">Contact</a>
+  </div>
+
+  <!-- Main Content with animated border -->
+  <section class="pt-24 px-4 min-h-screen flex items-center justify-center">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8 border-4 border-blue-500 border-animate transition-all duration-2000">
+      <h1 class="text-4xl font-bold mb-4 text-center text-gray-800">Welcome to Our Mexican Restaurant</h1>
+      <p class="text-lg text-center text-gray-700 mb-6">Experience authentic Mexican cuisine with vibrant flavors and cozy ambiance.</p>
+    </div>
+  </section>
+
+  <script>
+    // Toggle mobile menu
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+
+    // Animate menu buttons on page load
+    window.onload = () => {
+      document.querySelectorAll('.fade-in-up').forEach((el, index) => {
+        setTimeout(() => {
+          el.classList.add('animate-fade-in-up');
+        }, index * 200);
+      });
+    }
+  </script>
+</body>
+</html>

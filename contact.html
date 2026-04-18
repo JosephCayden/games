@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us - Mexican Restaurant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom keyframes for border color animation */
+    @keyframes borderColorChange {
+      0% { border-color: #3b82f6; }
+      100% { border-color: #3b82f6; }
+    }
+    .border-animate {
+      animation: borderColorChange 2s forwards;
+    }
+    /* Animate menu buttons on load */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up {
+      animation: fadeInUp 1s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+
+  <nav class="w-full fixed top-0 bg-white z-50 backdrop-blur-sm p-4 flex justify-center items-center shadow-sm">
+    <div class="flex items-center justify-between w-full max-w-6xl">
+      <div class="text-xl font-bold text-gray-800">Mexican Restaurant</div>
+      
+      <div class="hidden md:flex space-x-4 text-gray-800 font-semibold mx-auto animate-fade-in-up">
+        <a href="index.html" class="hover:text-yellow-600">Home</a>
+        <a href="menu.html" class="hover:text-yellow-600">Menu</a>
+        <a href="about.html" class="hover:text-yellow-600">About</a>
+        <a href="games.html" class="hover:text-yellow-600">Games</a>
+        <a href="contact.html" class="text-yellow-600">Contact</a>
+      </div>
+      
+      <div class="md:hidden">
+        <button id="menu-toggle" class="text-gray-800 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="mobile-menu" class="hidden fixed top-16 right-4 bg-white bg-opacity-95 rounded-lg shadow-lg p-4 w-48 z-40">
+    <a href="index.html" class="block mb-2 text-gray-800 hover:text-yellow-600">Home</a>
+    <a href="menu.html" class="block mb-2 text-gray-800 hover:text-yellow-600">Menu</a>
+    <a href="about.html" class="block mb-2 text-gray-800 hover:text-yellow-600">About</a>
+    <a href="games.html" class="block mb-2 text-gray-800 hover:text-yellow-600">Games</a>
+    <a href="contact.html" class="block text-yellow-600">Contact</a>
+  </div>
+
+  <section class="pt-32 pb-12 px-4 min-h-screen">
+    <div class="max-w-6xl mx-auto">
+      
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">Contact Us</h1>
+        <p class="text-gray-600">Have a question or want to book a table? We'd love to hear from you!</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <div class="bg-white rounded-lg shadow-lg p-8 border-4 border-blue-500 border-animate">
+          <form action="#" method="POST" class="space-y-4">
+            <div>
+              <label class="block text-gray-700 font-bold mb-2">Name</label>
+              <input type="text" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="Your Name" required>
+            </div>
+            <div>
+              <label class="block text-gray-700 font-bold mb-2">Email</label>
+              <input type="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="your@email.com" required>
+            </div>
+            <div>
+              <label class="block text-gray-700 font-bold mb-2">Message</label>
+              <textarea class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" rows="4" placeholder="How can we help?" required></textarea>
+            </div>
+            <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+              Send Message
+            </button>
+          </form>
+        </div>
+
+        <div class="space-y-6">
+          <div class="bg-white rounded-lg shadow-lg p-8 border-l-8 border-yellow-500">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Visit Us</h2>
+            <div class="space-y-3 text-gray-700">
+              <p class="flex items-center">
+                <span class="mr-2">📍</span> 123 Taco Street, Flavor Town, MX 54321
+              </p>
+              <p class="flex items-center">
+                <span class="mr-2">📞</span> +1 (555) 123-4567
+              </p>
+              <p class="flex items-center">
+                <span class="mr-2">✉️</span> hola@mexicanrestaurant.com
+              </p>
+              <p class="flex items-center">
+                <span class="mr-2">⏰</span> Mon - Sun: 11:00 AM - 10:00 PM
+              </p>
+            </div>
+          </div>
+
+        
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Toggle mobile menu
+    document.getElementById('menu-toggle').addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+
+    // Animate menu buttons on page load
+    window.onload = () => {
+      document.querySelectorAll('.fade-in-up').forEach((el, index) => {
+        setTimeout(() => {
+          el.classList.add('animate-fade-in-up');
+        }, index * 200);
+      });
+    }
+  </script>
+</body>
+</html>
